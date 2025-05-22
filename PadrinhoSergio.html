@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Convite de Padrinhos</title>
+  <style>
+    :root {
+      --base: #5fa3f5;
+      --base-light: #aed9fc;
+      --base-dark: #3682c4;
+      --shadow: #1b5183;
+      --letter: #dcf3ff;
+      --pulse-glow: #82c3fc;
+    }
+    
+    html, body {
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      background: #000;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    
+    #scaler {
+      width: 1080px;
+      height: 1920px;
+      position: fixed;
+      left: 0; top: 0;
+      background: #000;
+      overflow: hidden;
+      transform-origin: top left;
+    }
+
+    .container {
+      position: absolute;
+      width: 1080px;
+      height: 1920px;
+      top: 0;
+      left: 0;
+      max-width: 100vw;
+      max-height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .tela {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      opacity: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      transition: opacity 1.5s ease;
+      pointer-events: none;
+      background: transparent;
+    }
+
+    .ativa {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .tela iframe.bg, #iframeConvite {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  border: none;
+  margin: 0;
+  padding: 0;
+  display: block;
+  background: #fff;
+}
+
+    .content {
+      position: absolute;
+      bottom: 180px;
+      width: 240px;
+      height: 140px;
+      z-index: 10;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+
+    .mostrar-envelope {
+      opacity: 1;
+    }
+
+    .shadow {
+      display: none;
+    }
+
+    .letter {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      width: 220px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 15;
+      border-radius: 2px;
+      background: var(--letter);
+      box-shadow: 0px 1px 7px -2px var(--base);
+    }
+
+    .letter .body {
+      position: relative;
+      width: 200px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--base);
+    }
+
+    .letter .body .close {
+      position: absolute;
+      right: 0;
+      top: 0;
+      font-size: 24px;
+      font-family: sans-serif;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .letter .body .message {
+      font-size: 30px;
+      font-weight: 900;
+      text-align: center;
+      font-family: sans-serif;
+    }
+
+    .envelope {
+      position: relative;
+      width: 240px;
+      height: 140px;
+      background: linear-gradient(145deg, var(--base-light), var(--base));
+      border: 2px solid var(--shadow);
+      cursor: pointer;
+      animation: pulse 2s infinite;
+      box-shadow: 0 0 12px 2px var(--pulse-glow);
+      transition: box-shadow 0.3s ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 12px 2px var(--pulse-glow);
+      }
+      50% {
+        box-shadow: 0 0 20px 6px var(--pulse-glow);
+      }
+      100% {
+        box-shadow: 0 0 12px 2px var(--pulse-glow);
+      }
+    }
+
+    .envelope::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 240px;
+      border-top: 90px solid #7bade6f5;
+      border-left: 120px solid transparent;
+      border-right: 120px solid transparent;
+      box-sizing: border-box;
+      z-index: 30;
+      transform-origin: top;
+    }
+
+    .envelope::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 240px;
+      height: 140px;
+      z-index: 25;
+      background:
+        linear-gradient(30deg, var(--base-dark) 47%, var(--shadow) 50%, var(--base) 50%) 120px 70px/ 120px 70px no-repeat,
+        linear-gradient(31deg, var(--base) 49%, var(--shadow) 50%, transparent 50%) 0px 0px/ 122px 70px no-repeat,
+        linear-gradient(150deg, var(--base) 50%, var(--shadow) 50%, var(--base-dark) 53%) 0px 70px/ 120px 70px no-repeat,
+        linear-gradient(148.7deg, transparent 50%, var(--shadow) 50%, var(--base) 51%) 120px 0px/ 120px 70px no-repeat;
+    }
+
+@media (max-width: 600px) {
+  .content {
+    top: 63vh !important; /* envelope mais para baixo */
+    width: min(60vw, 240px);
+    height: min(20vw, 100px);
+    bottom: auto !important;
+  }
+  .envelope {
+    top: 0 !important; /* envelope dentro do .content, não precisa top extra */
+    left: 0 !important;
+    transform: none !important;
+    margin: 0 auto !important;
+    animation: pulse 2s infinite;
+  }
+  .envelope::before {
+   z-index: 30;
+   }
+   .envelope::after {
+   z-index: 25;
+   }
+  .letter {
+    top: 15px !important;   /* agora fica dentro do envelope */
+    left: 40px !important;
+    z-index: 15;
+    width: 190px !important;
+    height: 120px !important;
+    font-size: 80px !important;
+  }
+  .letter .body {
+    width: 160px !important;
+    height: 90px !important;
+  }
+ 
+  #frase1, #frase4, #fraseFinal {
+    font-size: clamp(22px, 5.8vw, 25px) !important;
+    width: 90vw !important;
+    max-width: 98vw !important;
+    word-break: break-word;
+    white-space: normal;
+    padding: 0 2vw;
+  }
+
+  #frase2, #frase3, #frase5, #frase6, #frase7 {
+    font-size: clamp(10px, 3.6vw, 19px) !important;
+    width: 80vw !important;
+    max-width: 90vw !important;
+    word-break: break-word;
+    white-space: normal;
+    padding: 0 2vw;
+  }
+  #frase1 { top: 45vh !important }
+  #frase2 { top: 50vh !important }
+  #frase3 { top: 59vh !important }
+  #frase4 { top: 53vh !important }
+  #frase5 { top: 59vh !important }
+  #frase6 { top: 67vh !important }
+  #frase7 { top: 74vh !important }
+  #fraseFinal { bottom: 14vh !important }
+}
+
+    @keyframes pulseGlow {
+      0% {
+        text-shadow:
+          -2px -2px 0 #0926a4,
+          2px -2px 0 #0926a4,
+          -2px 2px 0 #0926a4,
+          2px 2px 0 #0926a4,
+          0 0 5px #ffffff,
+          0 0 10px #84b6f4,
+          0 0 15px #84b6f4;
+        transform: scale(1);
+      }
+      50% {
+        text-shadow:
+          -2px -2px 0 #0926a4,
+          2px -2px 0 #0926a4,
+          -2px 2px 0 #0926a4,
+          2px 2px 0 #0926a4,
+          0 0 5px #ffffff,
+          0 0 10px #84b6f4,
+          0 0 15px #84b6f4;
+        transform: scale(1.05);
+      }
+      100% {
+        text-shadow:
+          -2px -2px 0 #0926a4,
+          2px -2px 0 #0926a4,
+          -2px 2px 0 #0926a4,
+          2px 2px 0 #0926a4,
+          0 0 5px #ffffff,
+          0 0 10px #84b6f4,
+          0 0 15px #84b6f4;
+        transform: scale(1);
+      }
+    }
+
+@keyframes pulseEffect {
+  0% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+}
+
+@keyframes glowEffect {
+  0% {
+    filter: drop-shadow(0 0 5px #84b6f4);
+  }
+  50% {
+    filter: drop-shadow(0 0 5px #84b6f4);
+  }
+  100% {
+    filter: drop-shadow(0 0 5px #84b6f4);
+  }
+}
+
+#frase1,
+#frase3,
+#frase4,
+#fraseFinal {
+  color: #0926a4 !important;
+  text-shadow:
+    -1.3px -1.3px 0 #fff,
+     1.3px -1.3px 0 #fff,
+    -1.3px  1.3px 0 #fff,
+     1.3px  1.3px 0 #fff,
+     0px  0px 5.5px #fff !important;
+}
+
+    #fraseFinal,
+    #frase1,
+    #frase2,
+    #frase3,
+    #frase4, 
+    #frase5,
+    #frase6,
+    #frase7 {
+      position: absolute;
+      font-size: 48px;
+      text-align: center;
+      transform: translateX(-50%);
+      font-family: sans-serif;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: -2px 2px 0 #0926a4;
+      z-index: 100;
+      opacity: 0;
+      animation: pulseGlow 2s infinite;
+      line-height: 1.2;
+      width: 95vw;
+      max-width: 370px;      /* limite para não passar do envelope/imagem */
+      min-width: 180px;  
+      word-break: break-word;
+      white-space: normal;
+      padding: 0 2vw;
+    }
+
+   #frase1 { font-size: 35px; top: 400px; transform: translateX(-50%); }
+    #frase2 { font-size: 19px; top: 460px; transform: translateX(-50%); }
+    #frase3 { font-size: 21px; top: 550px; transform: translateX(-50%); }
+    #frase4 { font-size: 35px; top: 460px; transform: translateX(-50%); }
+    #frase5 { font-size: 20px; top: 520px; transform: translateX(-50%); }
+    #frase6 { font-size: 20px; top: 615px; transform: translateX(-50%); }
+    #frase7 { font-size: 20px; top: 700px; transform: translateX(-50%); }
+    #fraseFinal { font-size: 25px; bottom: 100px; transform: translateX(-50%); }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="tela1" class="tela ativa">
+      <iframe class="bg" src="https://www.canva.com/design/DAGmxrNUco4/Dim7apfdATOUxmfnvtFQsg/view?embed" allowfullscreen frameborder="0" onload="document.querySelector('.content').classList.add('mostrar-envelope')"></iframe>
+      <!-- Frases que aparecem no começo -->
+      <div id="frase1">O Pequeno Antony</div>
+      <div id="frase2">Está te enviando nesse envelope uma notícia muito especial, afinal, notícias boas também chegam cedo!</div>
+      <div id="frase3">CLIQUE AQUI PARA ABRIR</div>
+
+      <div class="content" onclick="abrirConvite()">
+        <div class="envelope"></div>
+        <div class="letter">
+          <div class="body">
+            <span class="close" onclick="event.stopPropagation(); fecharConvite()">x</span>
+            <div class="message"></div>
+          </div>
+        </div>
+        <div class="shadow"></div>
+      </div>
+    </div>
+
+    <div id="tela2" class="tela">
+      <iframe class="bg" id="iframeConvite" src="" allowfullscreen frameborder="0"></iframe>
+      <div id="fraseFinal">Você aceita ser meu padrinho?</div>
+      <div id="frase4">TITIO Sérgio</div>
+      <div id="frase5">Mamãe e Papai me disseram que os PADRINHOS são anjos com quem posso RIR e CHORAR.</div>
+      <div id="frase6">Que me manterão em pé quando minhas asas não souberem como voar.</div>
+      <div id="frase7">Por isso com muito AMOR, escolheram você para ser um anjo na minha vida.</div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CSSRulePlugin.min.js"></script>
+  <script>
+    let t1 = gsap.timeline({ paused: true });
+    let flap = CSSRulePlugin.getRule(".envelope::before");
+
+    t1.to(flap, {
+      duration: 0.5,
+      cssRule: { rotateX: 180 }
+    }).set(flap, {
+      cssRule: { zIndex: 10 }
+    }).to('.letter', {
+      translateY: -200,
+      duration: 0.9,
+      ease: "back.inOut(1.5)"
+    }).set('.letter', {
+      zIndex: 40
+    }).to('.letter', {
+      duration: .7,
+      ease: "back.out(.4)",
+      translateY: -5,
+      translateZ: 250
+    });
+
+    let t2 = gsap.timeline({ paused: true });
+    t2.to('.shadow', {
+      delay: 1.4,
+      width: 450,
+      ease: "back.out(.2)",
+      duration: .7
+    });
+
+    // Mostra frases da tela 1 ao carregar
+    window.addEventListener("load", () => {
+      ['frase1', 'frase2', 'frase3'].forEach((id, i) => {
+        const el = document.getElementById(id);
+        el.style.display = "block";
+        gsap.to(el, {
+          opacity: 1,
+          y: 10,
+          duration: 1.4,
+          ease: "power3.out",
+          delay: i * 0.8
+        });
+      });
+    });
+
+    function abrirConvite() {
+      t1.play();
+      t2.play();
+
+      // Esconde frases da tela 1
+      ['frase1', 'frase2', 'frase3'].forEach((id) => {
+        gsap.to(`#${id}`, {
+          opacity: 0,
+          duration: 0.5
+        });
+      });
+
+      setTimeout(() => {
+        document.getElementById("tela1").classList.remove("ativa");
+        document.getElementById("tela2").classList.add("ativa");
+        document.getElementById("iframeConvite").src = "https://www.canva.com/design/DAGm-5aMmQ8/QFZWcZRp0EvAJHb5rjtjMw/view?embed";
+      }, 2000);
+    }
+
+    function fecharConvite() {
+      t1.reverse();
+      t2.reverse();
+    }
+
+    document.getElementById("iframeConvite").addEventListener("load", function () {
+  setTimeout(() => {
+    ['frase4', 'frase5', 'frase6', 'frase7'].forEach((id, i) => {
+      const el = document.getElementById(id);
+      el.style.display = "block";
+      gsap.to(el, {
+        opacity: 1,
+        y: 10,
+        duration: 1.5,
+        ease: "power3.out",
+        delay: i * 0.8
+      });
+    });
+    // Frase final aparece depois das outras
+    setTimeout(() => {
+      const frase = document.getElementById("fraseFinal");
+      frase.style.display = "block";
+      gsap.to(frase, {
+        opacity: 1,
+        y: -20,
+        duration: 1.5,
+        ease: "power3.out"
+      });
+    }, 3500); // ajuste o tempo aqui conforme desejar
+  }, 1000);
+});
+  </script>
+</body>
+</html>
